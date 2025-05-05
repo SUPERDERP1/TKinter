@@ -14,8 +14,16 @@ textRect.center = (200, 100)
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 active = True
 def quadbeat1():
-    player_pos.x = 1100
-    
+    positions = [1100, 800, 500, 200]  
+    for pos in positions:
+        player_pos.x = pos
+        screen.fill("white")  
+        circle = pygame.draw.circle(screen, "red", player_pos, 40) 
+        rect = pygame.Rect(100, 0, 5, 720)
+        pygame.draw.rect(screen, "blue", rect)
+        screen.blit(text, textRect)
+        pygame.display.flip()
+        pygame.time.delay(1000)
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -45,12 +53,13 @@ while running:
         player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
         text = font.render(str(score), True, "black")
         screen.blit(text, textRect)
+
     # flip() the dispay to put your work on screen
     pygame.display.flip()
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
-    quadbeat1()
+    
 
 pygame.quit()
