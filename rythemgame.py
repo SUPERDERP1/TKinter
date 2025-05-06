@@ -33,9 +33,17 @@ while running:
                     screen.blit(text, textRect)
                 else:
                     score -= 1
-                    player_pos = pygame.Vector2(1300, screen.get_height()/2)
                     text = font.render(str(score), True, "black")
                     screen.blit(text, textRect)
+                    testX = 100 
+                    if player_pos.x < player_pos2.x:
+                        player_pos.x = 1300
+                        moving[0] = False
+                        active[0] = False
+                    else:
+                        player_pos2.x = 1300
+                        moving[1] = False
+                        active[1] = False
     screen.fill("white")
     missrect = pygame.Rect(1, 0, 5, 720)
     circle = pygame.draw.circle(screen, "red", player_pos, 40)
@@ -49,6 +57,12 @@ while running:
         moving[0] = False
         text = font.render(str(score), True, "black")
         screen.blit(text, textRect)
+    if missrect.colliderect(circle2):
+        score -= 1
+        player_pos2 = pygame.Vector2(1300, screen.get_height()/2)
+        moving[1] = False
+        text = font.render(str(score), True, "black")
+        screen.blit(text, textRect)
     if moving[0] == True:
         player_pos.x -= 10
     if moving[1] == True:
@@ -60,7 +74,7 @@ while running:
     # independent physics.
     timer = dt + timer
     seconds = math.floor(timer)
-    timings = [2,3,5,6]
+    timings = [2,3,8,9]
     for sec in timings:
         if seconds == sec and active[0] == False:
             tsec[0] = seconds + 1
@@ -68,7 +82,7 @@ while running:
             player_pos.x = 1300
             active[0] = True
             pass
-        elif active == True and seconds == tsec[0]:
+        if active == True and seconds == tsec[0]:
             active[0] = False
             print("1 deactive")
             pass
@@ -78,7 +92,7 @@ while running:
             player_pos.x = 1300
             active[1] = True
             pass
-        elif active == True and seconds == tsec[1]:
+        if active == True and seconds == tsec[1]:
             active[1] = False
             print("2 deactive")
             pass
