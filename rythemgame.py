@@ -8,26 +8,36 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+# text object
 score = 0
 font = pygame.font.Font('HelveticaNeue.ttc', 32)
 text = font.render(str(score), True, "black")
 textRect = text.get_rect()
 textRect.center = (200, 100)
+# note pos
 player_pos = pygame.Vector2(1300, screen.get_height() / 2)
 player_pos2 = pygame.Vector2(1300, screen.get_height() / 2)
 active = [False, False, False]
+# timer 
 timer = 0
+# menu variables
 menuActive = True
 all_sprites = pygame.sprite.Group()
 fontA = pygame.font.Font('HelveticaNeue.ttc', 70)
 squareWidth = 40
+# menu declaration
 menu = pygameGUI.Menu("Start Game", "white", fontA, 500, 600, image= None, pos=(100,60))
+# 
 startB = pygameGUI.Text("Start", fontA, (255, 255, 255), (640, 450))
 quitB = pygameGUI.Text("Quit", fontA, (255, 255, 255)) 
+
 all_sprites.add(quitB)
 all_sprites.add(startB)
+
 menu.add(startB)
 menu.add(quitB)
+
+timings = [6,7,10,11]
 
 while running:
     # poll for events
@@ -111,25 +121,24 @@ while running:
 
         timer = dt + timer
         seconds = math.floor(timer)
-        timings = [6,7,10,11]
 
         for sec in timings:
+            print(timings)
             if seconds == sec and active[0] == False:
-                print("1 active")
+                print("1 active ")
                 player_pos.x = 1300
                 active[0] = True
-                exit = True
-            
+                del timings[0]
+
             elif seconds == sec and active[1] == False:
-                print("2 active")
+                print("2 active ")
                 player_pos.x = 1300
                 active[1] = True
-                exit = True
-            #not breaking loop is problem
+                del timings[0]
+
         dt = clock.tick(60) / 1000
     else:
         screen.fill("white")
         menu.draw(screen) 
         pygame.display.flip() 
-
 pygame.quit()
