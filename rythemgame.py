@@ -15,9 +15,11 @@ text = font.render(str(score), True, "black")
 textRect = text.get_rect()
 textRect.center = (200, 100)
 # note pos
-player_pos = pygame.Vector2(1300, screen.get_height() / 2)
-player_pos2 = pygame.Vector2(1300, screen.get_height() / 2)
-active = [False, False, False]
+player_pos = pygame.Vector2(1400, 240)
+player_pos2 = pygame.Vector2(1400, 240)
+bplayer_pos = pygame.Vector2(1400, 480)
+bplayer_pos2 = pygame.Vector2(1400, 480)
+active = [False, False, False, False]
 # timer 
 timer = 0
 # menu variables
@@ -27,7 +29,6 @@ fontA = pygame.font.Font('HelveticaNeue.ttc', 70)
 squareWidth = 40
 # menu declaration
 menu = pygameGUI.Menu("Start Game", "white", fontA, 500, 600, image= None, pos=(100,60))
-# 
 startB = pygameGUI.Text("Start", fontA, (255, 255, 255), (640, 450))
 quitB = pygameGUI.Text("Quit", fontA, (255, 255, 255)) 
 
@@ -38,6 +39,7 @@ menu.add(startB)
 menu.add(quitB)
 
 timings = [6,7,10,11]
+btimings = [5,6,9,10]
 
 while running:
     # poll for events
@@ -59,13 +61,21 @@ while running:
 
         if event.type == pygame.KEYDOWN:
 
-            if event.key == pygame.K_SPACE: 
+            if event.key == pygame.K_f: 
 
                 if rect.colliderect(circle):
-                    player_pos = pygame.Vector2(1300, screen.get_height() / 2)
+                    player_pos.xy = 1400, 240
                     score += 1
                     text = font.render(str(score), True, "black")
                     screen.blit(text, textRect)
+                    active[0] = False
+
+                elif rect.colliderect(circle2):
+                    player_pos2.xy = 1400,240
+                    score += 1
+                    text = font.render(str(score), True, "black")
+                    screen.blit(text, textRect)
+                    active[1] = False
 
                 else:
                     score -= 1
@@ -74,12 +84,43 @@ while running:
                     testX = 100 
 
                     if player_pos.x < player_pos2.x:
-                        player_pos.x = 1300
+                        player_pos.x = 1400
                         active[0] = False
 
                     else:
-                        player_pos2.x = 1300
+                        player_pos2.x = 1400
                         active[1] = False
+
+            if event.key == pygame.K_j: 
+
+                if rect.colliderect(bcircle):
+                    bplayer_pos.xy = 1400, 480
+                    score += 1
+                    text = font.render(str(score), True, "black")
+                    screen.blit(text, textRect)
+                    active[2] = False
+
+                elif rect.colliderect(bcircle2):
+                    bplayer_pos2.xy = 1400, 480
+                    score += 1
+                    text = font.render(str(score), True, "black")
+                    screen.blit(text, textRect)
+                    active[3] = False
+
+                else:
+                    score -= 1
+                    text = font.render(str(score), True, "black")
+                    screen.blit(text, textRect)
+                    testX = 100 
+
+                    if bplayer_pos.x < bplayer_pos2.x:
+                        bplayer_pos.x = 1400
+                        active[2] = False
+
+                    else:
+                        bplayer_pos2.x = 1400
+                        active[3] = False
+
 
     if not menuActive:
 
@@ -89,22 +130,38 @@ while running:
         missrect = pygame.Rect(1, 0, 5, 720)
         circle = pygame.draw.circle(screen, "red", player_pos, 40)
         circle2 = pygame.draw.circle(screen, "red", player_pos2, 40)
+        bcircle = pygame.draw.circle(screen, "blue", bplayer_pos, 40)
+        bcircle2 = pygame.draw.circle(screen, "blue", bplayer_pos2, 40)
         rect = pygame.Rect(100, 0, 5, 720)
-        pygame.draw.rect(screen, "blue", rect)
+        pygame.draw.rect(screen, "purple", rect)
         screen.blit(text, textRect)
 
 
         if missrect.colliderect(circle):
             score -= 1
-            player_pos = pygame.Vector2(1300, screen.get_height()/2)
+            player_pos = pygame.Vector2(1400, 240)
             active[0] = False
             text = font.render(str(score), True, "black")
             screen.blit(text, textRect)
 
         if missrect.colliderect(circle2):
             score -= 1
-            player_pos2 = pygame.Vector2(1300, screen.get_height()/2)
+            player_pos2 = pygame.Vector2(1400, 240)
             active[1] = False
+            text = font.render(str(score), True, "black")
+            screen.blit(text, textRect)
+
+        if missrect.colliderect(bcircle):
+            score -= 1
+            bplayer_pos = pygame.Vector2(1400, 480)
+            active[2] = False
+            text = font.render(str(score), True, "black")
+            screen.blit(text, textRect)
+
+        if missrect.colliderect(bcircle2):
+            score -= 1
+            bplayer_pos2 = pygame.Vector2(1400, 480)
+            active[3] = False
             text = font.render(str(score), True, "black")
             screen.blit(text, textRect)
 
@@ -113,7 +170,12 @@ while running:
 
         if active[1] == True:
             player_pos2.x -= 10
-
+        
+        if active[2] == True:
+            bplayer_pos.x -= 10
+        
+        if active[3] == True:
+            bplayer_pos2.x -= 10
 
         # flip() the dispay to put your work on screen
         pygame.display.flip()
@@ -126,15 +188,25 @@ while running:
             print(timings)
             if seconds == sec and active[0] == False:
                 print("1 active ")
-                player_pos.x = 1300
+                player_pos.xy = 1400, 240
                 active[0] = True
                 del timings[0]
 
             elif seconds == sec and active[1] == False:
-                print("2 active ")
-                player_pos.x = 1300
+                player_pos2.xy = 1400, 240
                 active[1] = True
                 del timings[0]
+
+        for sec in btimings:
+            if seconds == sec and active[2] == False:
+                bplayer_pos.xy = 1400, 480
+                active[2] = True
+                del btimings[0]
+
+            elif seconds == sec and active[3] == False:
+                bplayer_pos2.xy = 1400, 480
+                active[3] = True
+                del btimings[0]
 
         dt = clock.tick(60) / 1000
     else:
