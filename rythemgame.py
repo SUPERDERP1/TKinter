@@ -26,20 +26,26 @@ timer = 0
 menuActive = True
 all_sprites = pygame.sprite.Group()
 fontA = pygame.font.Font('HelveticaNeue.ttc', 70)
+fontB = pygame.font.Font('HelveticaNeue.ttc', 35)
 squareWidth = 40
 # menu declaration
 menu = pygameGUI.Menu("Start Game", "white", fontA, 500, 600, image= None, pos=(100,60))
 startB = pygameGUI.Text("Start", fontA, (255, 255, 255), (640, 450))
 quitB = pygameGUI.Text("Quit", fontA, (255, 255, 255)) 
-
+helpL = pygameGUI.Text("Press F to hit Red Notes", fontB, (255, 255, 255), (640, 600))
+helpL2 = pygameGUI.Text("Press J to hit Blue Notes", fontB, (255, 255, 255), (640, 600))
+# adding sprites to menu
 all_sprites.add(quitB)
 all_sprites.add(startB)
-
+all_sprites.add(helpL)
+all_sprites.add(helpL2)
 menu.add(startB)
 menu.add(quitB)
-
-timings = [6,7,10,11]
-btimings = [5,6,9,10]
+menu.add(helpL)
+menu.add(helpL2)
+# beat timings
+timings = [4,4.5]
+btimings = [5,5.75]
 
 while running:
     # poll for events
@@ -48,7 +54,7 @@ while running:
 
         if event.type == pygame.QUIT:
             running = False
-
+        # menu click detection
         if event.type == pygame.MOUSEBUTTONUP:     
             pos = pygame.mouse.get_pos()     
             clickedSprites = [s for s in all_sprites if s.rect.collidepoint(pos)]    
@@ -58,11 +64,11 @@ while running:
 
             if quitB in clickedSprites: #quits the game when the quit button is clicked
                 running = False
-
+        # on key press
         if event.type == pygame.KEYDOWN:
-
-            if event.key == pygame.K_f: 
-
+            # if keypress is f
+            if event.key == pygame.K_f and not menuActive: 
+                # if in hit zone detection
                 if rect.colliderect(circle):
                     player_pos.xy = 1400, 240
                     score += 1
@@ -76,7 +82,7 @@ while running:
                     text = font.render(str(score), True, "black")
                     screen.blit(text, textRect)
                     active[1] = False
-
+                # Not in hit zone logic
                 else:
                     score -= 1
                     text = font.render(str(score), True, "black")
@@ -90,9 +96,9 @@ while running:
                     else:
                         player_pos2.x = 1400
                         active[1] = False
-
-            if event.key == pygame.K_j: 
-
+            # if j key pressed
+            if event.key == pygame.K_j and menuActive: 
+                # collision detection
                 if rect.colliderect(bcircle):
                     bplayer_pos.xy = 1400, 480
                     score += 1
@@ -106,7 +112,7 @@ while running:
                     text = font.render(str(score), True, "black")
                     screen.blit(text, textRect)
                     active[3] = False
-
+                # not in hit zone logic
                 else:
                     score -= 1
                     text = font.render(str(score), True, "black")
@@ -121,10 +127,10 @@ while running:
                         bplayer_pos2.x = 1400
                         active[3] = False
 
-
+    # non-menu logic
     if not menuActive:
-
-        screen.fill("white")
+        #remove old 
+        screen.fill("#cdcdcd")
 
 
         missrect = pygame.Rect(1, 0, 5, 720)
@@ -182,7 +188,7 @@ while running:
 
 
         timer = dt + timer
-        seconds = math.floor(timer)
+        seconds = round(timer, 2)
 
         for sec in timings:
             print(timings)
